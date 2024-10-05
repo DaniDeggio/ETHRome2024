@@ -16,7 +16,8 @@ pub struct State {
 }
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
 pub struct StorageItem {
+    // Value of the StorageItem  
     pub value: String,
+    // ViewingKey of the StorageItem to unlock the value
     pub viewing_key: String,
-    pub owner: Addr,  // Aggiungi il campo owner di tipo Addr
 }

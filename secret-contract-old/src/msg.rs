@@ -51,8 +51,7 @@ pub struct ResponseRetrieveMsg {
     // value of the StorageItem  
     pub value: String,
     // response message
-    pub message: String,
-    pub owner: Addr
+    pub message: String
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]

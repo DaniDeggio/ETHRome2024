@@ -1,4 +1,4 @@
-use crate::{ 
+use crate::{
     msg::{
         ExecuteMsg, GatewayMsg, InputRetrieveMsg, InputStoreMsg, InstantiateMsg, QueryMsg,
         ResponseRetrieveMsg, ResponseStoreMsg,
@@ -8,7 +8,7 @@ use crate::{
 use anybuf::Anybuf;
 use base64::{engine::general_purpose::STANDARD, Engine};
 use cosmwasm_std::{
-    entry_point, to_binary, to_vec, Addr, Binary, ContractResult, Deps, DepsMut, Env, MessageInfo,
+    entry_point, to_binary, to_vec, Binary, ContractResult, Deps, DepsMut, Env, MessageInfo,
     Response, StdError, StdResult, SystemResult,
 };
 use secret_path::{
@@ -75,7 +75,7 @@ fn try_handle(
         )
         .map_err(|err| StdError::generic_err(err.to_string()))?;
 
-    // combine input values and task to create verification hash, once with the unsafe_payload flag = true and once = false
+    // combine input values and task to create verification hash, once with the unsafe_payload flag = true and once = falsecargo
     let input_hash_safe = sha_256(
         &[
             msg.input_values.as_bytes(),
@@ -107,9 +107,9 @@ fn try_handle(
     // determine which function to call based on the included handle
     let handle = msg.handle.as_str();
     match handle {
-        "store_value" => store_value(deps, env, info, msg.input_values, msg.task, msg.input_hash),
-        "retrieve_value" => retrieve_value(deps, env, info, msg.input_values, msg.task, msg.input_hash),
-        "change_value" => change_value(deps, env, info, msg.input_values, msg.task, msg.input_hash),
+        "store_value" => store_value(deps, env, msg.input_values, msg.task, msg.input_hash),
+        "retrieve_value" => retrieve_value(deps, env, msg.input_values, msg.task, msg.input_hash),
+        "change_value" => change_value(deps, env, msg.input_values, msg.task, msg.input_hash),
         _ => Err(StdError::generic_err("invalid handle".to_string())),
     }
 }
@@ -117,7 +117,6 @@ fn try_handle(
 fn store_value(
     deps: DepsMut,
     _env: Env,
-    info: MessageInfo,
     input_values: String,
     task: Task,
     input_hash: Binary,
@@ -127,11 +126,10 @@ fn store_value(
     let input: InputStoreMsg = serde_json_wasm::from_str(&input_values)
         .map_err(|err| StdError::generic_err(err.to_string()))?;
 
-    // create a task information store including the address of the sender (info.sender)
+    // create a task information store
     let storage_item = StorageItem {
         value: input.value,
         viewing_key: input.viewing_key,
-        owner: info.sender.clone(),  // store the address of the wallet that pushed the value
     };
 
     let map_contains_kv = KV_MAP.contains(deps.storage, &input.key);
@@ -150,7 +148,7 @@ fn store_value(
         message: "Value store completed successfully".to_string(),
     };
 
-    // Serialize the struct to a JSON string
+    // Serialize the struct to a JSON string1
     let json_string =
         serde_json_wasm::to_string(&data).map_err(|err| StdError::generic_err(err.to_string()))?;
 
@@ -177,7 +175,6 @@ fn store_value(
 fn change_value(
     deps: DepsMut,
     _env: Env,
-    info: MessageInfo,
     input_values: String,
     task: Task,
     input_hash: Binary,
@@ -191,17 +188,16 @@ fn change_value(
         .get(deps.storage, &input.key)
         .ok_or_else(|| StdError::generic_err("Value for this key not found"))?;
 
-    if value.viewing_key != input.viewing_key || value.owner != info.sender {
+    if value.viewing_key != input.viewing_key {
         return Err(StdError::generic_err(
-            "Viewing Key incorrect or not allowed to change value",
+            "Viewing Key incorrect or not found, not allowed to change value",
         ));
     }
 
-    // create a task information store with the new value
+    // create a task information store
     let storage_item = StorageItem {
         value: input.value,
         viewing_key: input.viewing_key,
-        owner: info.sender.clone(),
     };
 
     // Remove old value first
@@ -216,10 +212,10 @@ fn change_value(
 
     let data = ResponseStoreMsg {
         key: input.key.to_string(),
-        message: "Value updated successfully".to_string(),
+        message: "Value store completed successfully".to_string(),
     };
 
-    // Serialize the struct to a JSON string
+    // Serialize the struct to a JSON string1
     let json_string =
         serde_json_wasm::to_string(&data).map_err(|err| StdError::generic_err(err.to_string()))?;
 
@@ -240,13 +236,12 @@ fn change_value(
 
     Ok(Response::new()
         .add_message(callback_msg)
-        .add_attribute("status", "updated value with key"))
+        .add_attribute("status", "stored value with key"))
 }
 
 fn retrieve_value(
     deps: DepsMut,
     _env: Env,
-    info: MessageInfo,
     input_values: String,
     task: Task,
     input_hash: Binary,
@@ -260,19 +255,17 @@ fn retrieve_value(
         .get(deps.storage, &input.key)
         .ok_or_else(|| StdError::generic_err("Value for this key not found"))?;
 
-    // Allow retrieval only if the requester is the owner or the contract creator
-    if value.viewing_key != input.viewing_key || (value.owner != info.sender && info.sender != config.gateway_address) {
-        return Err(StdError::generic_err("Viewing Key incorrect or access denied"));
+    if value.viewing_key != input.viewing_key {
+        return Err(StdError::generic_err("Viewing Key incorrect or not found"));
     }
 
     let data = ResponseRetrieveMsg {
         key: input.key.to_string(),
-        value: value.value.to_string(),
-        owner: value.owner.clone(),
-        message: "Value retrieved successfully".to_string(),
+        message: "Retrieved value successfully".to_string(),
+        value: value.value,
     };
 
-    // Serialize the struct to a JSON string
+    // Serialize the struct to a JSON string1
     let json_string =
         serde_json_wasm::to_string(&data).map_err(|err| StdError::generic_err(err.to_string()))?;
 
@@ -293,7 +286,7 @@ fn retrieve_value(
 
     Ok(Response::new()
         .add_message(callback_msg)
-        .add_attribute("status", "retrieved value with key"))
+        .add_attribute("status", "stored value with key"))
 }
 
 fn get_contract_code_hash(deps: DepsMut, contract_address: String) -> StdResult<String> {
@@ -353,7 +346,6 @@ fn retrieve_value_query(deps: Deps, key: String, viewing_key: String) -> StdResu
         key: key.to_string(),
         message: "Retrieved value successfully".to_string(),
         value: value.value,
-        owner: value.owner,
     })
 }
 

@@ -297,8 +297,62 @@ fn retrieve_value(
 }
 
 fn get_contract_code_hash(deps: DepsMut, contract_address: String) -> StdResult<String> {
-    match deps.querier.query_wasm_contract_info(contract_address) {
-        Ok(Some(contract)) => Ok(contract.code_hash),
-        _ => Err(StdError::generic_err("Failed to get contract code hash")),
+    let code_hash_query: cosmwasm_std::QueryRequest<cosmwasm_std::Empty> =
+        cosmwasm_std::QueryRequest::Stargate {
+            path: "/secret.compute.v1beta1.Query/CodeHashByContractAddress".into(),
+            data: Binary(Anybuf::new().append_string(1, contract_address).into_vec()),
+        };
+
+    let raw = to_vec(&code_hash_query).map_err(|serialize_err| {
+        StdError::generic_err(format!("Serializing QueryRequest: {}", serialize_err))
+    })?;
+
+    let code_hash = match deps.querier.raw_query(&raw) {
+        SystemResult::Err(system_err) => Err(StdError::generic_err(format!(
+            "Querier system error: {}",
+            system_err
+        ))),
+        SystemResult::Ok(ContractResult::Err(contract_err)) => Err(StdError::generic_err(format!(
+            "Querier contract error: {}",
+            contract_err
+        ))),
+        SystemResult::Ok(ContractResult::Ok(value)) => Ok(value),
+    }?;
+
+    // Remove the "\n@" if it exists at the start of the code_hash
+    let mut code_hash_str = String::from_utf8(code_hash.to_vec())
+        .map_err(|err| StdError::generic_err(format!("Invalid UTF-8 sequence: {}", err)))?;
+
+    if code_hash_str.starts_with("\n@") {
+        code_hash_str = code_hash_str.trim_start_matches("\n@").to_string();
     }
+
+    Ok(code_hash_str)
 }
+
+#[entry_point]
+pub fn query(deps: Deps, _env: Env, msg: QueryMsg) -> StdResult<Binary> {
+    let response = match msg {
+        QueryMsg::RetrieveValue { key, viewing_key } => {
+            retrieve_value_query(deps, key, viewing_key)
+        }
+    };
+    pad_query_result(response, BLOCK_SIZE)
+}
+
+fn retrieve_value_query(deps: Deps, key: String, viewing_key: String) -> StdResult<Binary> {
+    let value = KV_MAP
+        .get(deps.storage, &key)
+        .ok_or_else(|| StdError::generic_err("Value for this key not found"))?;
+
+    if value.viewing_key != viewing_key {
+        return Err(StdError::generic_err("Viewing Key incorrect or not found"));
+    }
+
+    to_binary(&ResponseRetrieveMsg {
+        key: key.to_string(),
+        message: "Retrieved value successfully".to_string(),
+        value: value.value,
+    })
+}
+
