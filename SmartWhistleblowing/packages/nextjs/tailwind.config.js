@@ -9,22 +9,22 @@ module.exports = {
     themes: [
       {
         light: {
-          primary: "#93BBFB",
-          "primary-content": "#212638",
-          secondary: "#DAE8FF",
-          "secondary-content": "#212638",
-          accent: "#93BBFB",
-          "accent-content": "#212638",
-          neutral: "#212638",
-          "neutral-content": "#ffffff",
-          "base-100": "#ffffff",
-          "base-200": "#f4f8ff",
-          "base-300": "#DAE8FF",
-          "base-content": "#212638",
-          info: "#93BBFB",
-          success: "#34EEB6",
-          warning: "#FFCF72",
-          error: "#FF8863",
+          primary: "#212121",           // Nero molto scuro
+          "primary-content": "#F9FBFF", // Bianco
+          secondary: "#424242",         // Grigio scuro
+          "secondary-content": "#F9FBFF", // Bianco
+          accent: "#616161",            // Grigio medio
+          "accent-content": "#F9FBFF",  // Bianco
+          neutral: "#F9FBFF",           // Bianco
+          "neutral-content": "#9E9E9E", // Grigio chiaro
+          "base-100": "#FFFFFF",        // Bianco
+          "base-200": "#BDBDBD",        // Grigio chiaro
+          "base-300": "#616161",        // Grigio medio
+          "base-content": "#F9FBFF",    // Bianco
+          info: "#B0BEC5",              // Grigio chiaro
+          success: "#34EEB6",           // Verde acqua
+          warning: "#FFCF72",           // Giallo
+          error: "#FF5722",             // Rosso chiaro
 
           "--rounded-btn": "9999rem",
 
@@ -41,22 +41,22 @@ module.exports = {
       },
       {
         dark: {
-          primary: "#212638",
-          "primary-content": "#F9FBFF",
-          secondary: "#323f61",
-          "secondary-content": "#F9FBFF",
-          accent: "#4969A6",
-          "accent-content": "#F9FBFF",
-          neutral: "#F9FBFF",
-          "neutral-content": "#385183",
-          "base-100": "#385183",
-          "base-200": "#2A3655",
-          "base-300": "#212638",
-          "base-content": "#F9FBFF",
-          info: "#385183",
-          success: "#34EEB6",
-          warning: "#FFCF72",
-          error: "#FF8863",
+          primary: "#212121",           // Nero molto scuro
+          "primary-content": "#F9FBFF", // Bianco
+          secondary: "#424242",         // Grigio scuro
+          "secondary-content": "#F9FBFF", // Bianco
+          accent: "#616161",            // Grigio medio
+          "accent-content": "#F9FBFF",  // Bianco
+          neutral: "#F9FBFF",           // Bianco
+          "neutral-content": "#9E9E9E", // Grigio chiaro
+          "base-100": "#a7f52a",        // Nero scuro
+          "base-200": "#1E1E1E",        // Grigio molto scuro
+          "base-300": "#2C2C2C",        // Grigio scuro
+          "base-content": "#F9FBFF",    // Bianco
+          info: "#B0BEC5",              // Grigio chiaro
+          success: "#34EEB6",           // Verde acqua (rimasto invariato)
+          warning: "#FFCF72",           // Giallo (rimasto invariato)
+          error: "#FF5722",             // Rosso chiaro
 
           "--rounded-btn": "9999rem",
 
