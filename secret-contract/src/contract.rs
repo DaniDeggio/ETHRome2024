@@ -127,11 +127,11 @@ fn store_value(
     let input: InputStoreMsg = serde_json_wasm::from_str(&input_values)
         .map_err(|err| StdError::generic_err(err.to_string()))?;
 
-    // create a task information store including the address of the sender (info.sender)
+    // Create a task information store including the address of the sender (info.sender)
     let storage_item = StorageItem {
         value: input.value,
         viewing_key: input.viewing_key,
-        owner: info.sender.clone(),  // store the address of the wallet that pushed the value
+        owner: if input.anonymus { Addr::unchecked("anonymous") } else { info.sender.clone() }, // Store anonymous if specified
     };
 
     let map_contains_kv = KV_MAP.contains(deps.storage, &input.key);
@@ -142,7 +142,7 @@ fn store_value(
         ));
     }
 
-    // map task to task info
+    // Map task to task info
     KV_MAP.insert(deps.storage, &input.key, &storage_item)?;
 
     let data = ResponseStoreMsg {
@@ -268,7 +268,7 @@ fn retrieve_value(
     let data = ResponseRetrieveMsg {
         key: input.key.to_string(),
         value: value.value.to_string(),
-        owner: value.owner.clone(),
+        owner: if value.owner == Addr::unchecked("anonymous") { Addr::unchecked("anonymous") } else { value.owner.clone() }, // Return owner as "anonymous" if applicable
         message: "Value retrieved successfully".to_string(),
     };
 

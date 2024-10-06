@@ -26,6 +26,8 @@ pub struct InputStoreMsg {
     pub value: String,
     // ViewingKey of the StorageItem to unlock the value
     pub viewing_key: String,
+    // Indicates if the value is to be stored anonymously
+    pub anonymus: bool,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
