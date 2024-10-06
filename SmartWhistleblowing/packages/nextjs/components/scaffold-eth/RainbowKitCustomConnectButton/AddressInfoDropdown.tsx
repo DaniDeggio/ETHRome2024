@@ -104,7 +104,7 @@ export const AddressInfoDropdown = ({
                 rel="noopener noreferrer"
                 className="whitespace-nowrap"
               >
-                View on Block Explorer
+                View my segnalation
               </a>
             </button>
           </li>

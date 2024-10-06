@@ -5,8 +5,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Bars3Icon, BugAntIcon } from "@heroicons/react/24/outline";
-import { RainbowKitCustomConnectButton } from "~~/components/scaffold-eth"; // Assuming this component manages user address and dropdown
+import { RainbowKitCustomConnectButton } from "~~/components/scaffold-eth"; // Adjust import if necessary
 import { useOutsideClick } from "~~/hooks/scaffold-eth";
+import logo from './logo.png'; // Import your local logo
 
 type HeaderMenuLink = {
   label: string;
@@ -84,10 +85,10 @@ export const Header = () => {
           )}
         </div>
 
-        {/* Logo */}
-        <Link href="/" passHref className="flex items-center gap-2 ml-4">
-          <div className="flex relative w-12 h-12">
-            <Image alt="Logo" className="cursor-pointer" fill src="/logo.png" /> {/* Use logo.png here */}
+        {/* Logo - Using the imported logo */}
+        <Link href="/" passHref className="flex items-center gap-2 ml-0"> {/* Set margin-left to 0 */}
+          <div className="flex relative w-12 h-12 rounded-lg overflow-hidden"> {/* Logo container */}
+            <Image alt="Logo" className="cursor-pointer" fill src={logo} style={{ objectFit: 'cover' }} /> {/* Use the imported logo */}
           </div>
           <div className="flex flex-col">
             <span className="font-bold text-lg text-gray-900">VoxPopuli</span> {/* Update title if necessary */}

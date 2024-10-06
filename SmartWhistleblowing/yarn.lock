@@ -8952,11 +8952,11 @@ __metadata:
   linkType: hard
 
 "jiti@npm:^2.1.2":
-  version: 2.2.1
-  resolution: "jiti@npm:2.2.1"
+  version: 2.3.1
+  resolution: "jiti@npm:2.3.1"
   bin:
     jiti: lib/jiti-cli.mjs
-  checksum: 40881ee25cb4e71686ba4d4553eef9452a3b2f06ca4308ddab15a1af1c7086023ef260c1f9ec7aa5fc306f66b1b27663060cab444aac20d5a582e0e068a1037a
+  checksum: af11ffa16ec0b0ba4ecea2cdb8cc62ddeb7c18e370f7ddf1549401bde579aa8bcb7674446a5eb64f7aa9e5370d6891e8096d6485d43f5b3b66efed83daf8b8e4
   languageName: node
   linkType: hard
 
@@ -9092,9 +9092,9 @@ __metadata:
   linkType: hard
 
 "json-stream-stringify@npm:^3.1.4":
-  version: 3.1.5
-  resolution: "json-stream-stringify@npm:3.1.5"
-  checksum: 7f0972aa8ae63e7e19db474df707a0c984e391113260fa5b93377665c6ff74f8b4e8512baafa075cbe2203a65d45ea1a08a7ff303777ac4e8ef2cd924ed45827
+  version: 3.1.6
+  resolution: "json-stream-stringify@npm:3.1.6"
+  checksum: ce873e09fe18461960b7536f63e2f913a2cb242819513856ed1af58989d41846976e7177cb1fe3c835220023aa01e534d56b6d5c3290a5b23793a6f4cb93785e
   languageName: node
   linkType: hard
 
