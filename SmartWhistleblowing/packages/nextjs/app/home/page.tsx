@@ -1,26 +1,40 @@
 "use client";
 
 import React, { useState } from 'react';
-import { useRouter } from "next/navigation"; // Usa il router di Next.js
+import { useRouter } from "next/navigation";
+import { sendToSecretPath } from '../../scripts/sendToSecretPath'; // Importa il tuo script
 
 const Home = () => {
-  const router = useRouter(); // Inizializza useRouter
+  const router = useRouter();
   const [userInput, setUserInput] = useState("");
-  const [isPublic, setIsPublic] = useState(true); // State to manage toggle switch
+  const [isPublic, setIsPublic] = useState(true);
+  const [message, setMessage] = useState(""); // Stato per il messaggio
+  const [showMessage, setShowMessage] = useState(false); // Stato per mostrare/nascondere il messaggio
 
   // Funzione per gestire il click del bottone
   const handleButtonClick = () => {
-    router.push('/info'); // Naviga verso la pagina /info
+    router.push('/info');
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setUserInput(e.target.value);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log(userInput, isPublic ? "Pubblica" : "Anonima");
-    setUserInput(""); // Pulisci l'input dopo il submit
+
+    try {
+      const result = await sendToSecretPath(userInput, isPublic);
+      setMessage(`Risultato: ${result}`); // Imposta il messaggio di ritorno
+      setShowMessage(true); // Mostra il messaggio
+      setTimeout(() => setShowMessage(false), 5000); // Nascondi il messaggio dopo 5 secondi
+    } catch (error) {
+      setMessage("Errore durante l'invio");
+      setShowMessage(true);
+      setTimeout(() => setShowMessage(false), 5000); // Nascondi il messaggio dopo 5 secondi
+    }
+
+    setUserInput("");
   };
 
   return (
@@ -64,6 +78,13 @@ const Home = () => {
             Invia
           </button>
         </form>
+
+        {/* Sezione per visualizzare il messaggio */}
+        {showMessage && (
+          <div className="mt-4 p-4 bg-green-200 text-green-800 rounded-lg">
+            {message}
+          </div>
+        )}
       </section>
 
       {/* Call to Action Section */}

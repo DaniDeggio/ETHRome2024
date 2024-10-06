@@ -1,7 +1,7 @@
 import { SecretNetworkClient, Wallet, coinsFromString } from "secretjs"
 import * as fs from "fs"
 
-const wallet = new Wallet("desk pigeon hammer sleep only mistake stool december offer patrol once vacant")
+const wallet = new Wallet("enact luggage phrase crystal tip piano seat pistol slide clock arrow wash")
 
 const contract_wasm = fs.readFileSync("./contract.wasm.gz")
 
