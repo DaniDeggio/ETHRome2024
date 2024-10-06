@@ -89,10 +89,10 @@ const Home = () => {
 
       {/* Call to Action Section */}
       <section className="py-16 bg-base-300 text-center">
-        <h2 className="text-3xl font-bold">Pronto per iniziare?</h2>
-        <p className="mt-4">Unisciti a noi e scopri di più sulle nostre offerte!</p>
+        <h2 className="text-3xl font-bold">Cerchi una sengalazione?</h2>
+        <p className="mt-4">Basta avere l'Id ed essere Autenticato!</p>
         <button className="mt-6 bg-primary text-white py-2 px-4 rounded-full hover:bg-secondary transition">
-          Inizia ora
+          Search
         </button>
       </section>
 

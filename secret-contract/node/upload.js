@@ -1,7 +1,9 @@
-import { SecretNetworkClient, Wallet, coinsFromString } from "secretjs"
+import { SecretNetworkClient, Wallet } from "secretjs";
 import * as fs from "fs"
+import dotenv from "dotenv";
+dotenv.config();
 
-const wallet = new Wallet("enact luggage phrase crystal tip piano seat pistol slide clock arrow wash")
+const wallet = new Wallet(process.env.MNEMONIC);
 
 const contract_wasm = fs.readFileSync("./contract.wasm.gz")
 
